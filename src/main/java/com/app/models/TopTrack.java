@@ -32,4 +32,6 @@ public class TopTrack {
     private Album album;
     @JsonProperty("available_markets")
     private List<String> availableMarkets;
+    @JsonProperty("external_urls")
+    private ExternalUrl externalUrls;
 }

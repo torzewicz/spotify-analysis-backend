@@ -29,4 +29,5 @@ public class Album {
     private String albumType;
     @JsonProperty("available_markets")
     private List<String> availableMarkets;
+    private List<Image> images;
 }

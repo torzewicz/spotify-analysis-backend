@@ -1,10 +1,7 @@
 package com.app.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@With
 public class TopTrack {
 
     private String name;
@@ -34,4 +32,6 @@ public class TopTrack {
     private List<String> availableMarkets;
     @JsonProperty("external_urls")
     private ExternalUrl externalUrls;
+
+    private Integer polishTopListRank;
 }

@@ -16,6 +16,11 @@ public class SpotifyConnectorComponent {
 
     private static final String BASE_URL = "https://api.spotify.com/v1/";
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
+    private final PolishTopListComponent polishTopListComponent;
+
+    public SpotifyConnectorComponent(PolishTopListComponent polishTopListComponent) {
+        this.polishTopListComponent = polishTopListComponent;
+    }
 
     public List<TopArtist> getUserTopArtists(TimeRange timeRange, Integer limit, String token) {
         String url = BASE_URL + "me/top/artists?time_range=" + timeRange.value + "&limit=" + limit;
@@ -35,8 +40,12 @@ public class SpotifyConnectorComponent {
         ResponseEntity<TopTracksResponse> responseEntity = REST_TEMPLATE.exchange(url, HttpMethod.GET, getHttpEntity(token), TopTracksResponse.class);
         if (responseEntity.hasBody()) {
             TopTracksResponse topArtistsResponse = responseEntity.getBody();
+
+
             if (topArtistsResponse != null) {
-                return topArtistsResponse.getItems();
+                return topArtistsResponse.getItems().stream()
+                        .map(track -> track.withPolishTopListRank(polishTopListComponent.getPlaceById(track.getId())))
+                        .collect(Collectors.toList());
             }
         }
         return null;

@@ -27,13 +27,14 @@ public class TopController {
     @GetMapping
     @RequestMapping("/artists")
     public List<TopArtist> getTopArtists(@RequestParam String token, @RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
-        log.info("Gettting top artists with time ramge: " + timeRange);
+        log.info("Getting top artists with time range: " + timeRange);
         return spotifyConnectorComponent.getUserTopArtists(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, token);
     }
 
     @GetMapping
     @RequestMapping("/tracks")
     public List<TopTrack> getTopTracks(@RequestParam String token, @RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
+        log.info("Getting top tracks with time range: " + timeRange);
         return spotifyConnectorComponent.getUserTopTracks(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, token);
     }
 

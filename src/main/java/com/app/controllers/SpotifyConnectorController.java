@@ -28,6 +28,7 @@ public class SpotifyConnectorController {
 
     @GetMapping("/connect")
     public TokenResponse authorize(@RequestParam String code) {
+        log.info("Getting access token");
         if (code == null || code.equalsIgnoreCase("")) {
             return null;
         }
@@ -43,7 +44,7 @@ public class SpotifyConnectorController {
         httpHeaders.setBasicAuth(clientId, clientSecret);
 
         ResponseEntity<TokenResponse> exchange = REST_TEMPLATE.exchange("https://accounts.spotify.com/api/token", HttpMethod.POST, new HttpEntity<>(map, httpHeaders), TokenResponse.class);
-
+        log.info("accestoken " + exchange.getBody().getAccessToken());
         return exchange.getBody();
 
     }

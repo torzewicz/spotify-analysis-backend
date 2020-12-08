@@ -61,6 +61,12 @@ public class SpotifyConnectorComponent {
         return null;
     }
 
+    public CurrentPlayback getUsersCurrentPlayback(String token) {
+        String url = BASE_URL + "me/player?market=ES";
+        ResponseEntity<CurrentPlayback> responseEntity = REST_TEMPLATE.exchange(url, HttpMethod.GET, getHttpEntity(token), CurrentPlayback.class);
+        return responseEntity.getBody();
+    }
+
 
     private HttpEntity<?> getHttpEntity(String token) {
         return new HttpEntity<>(getHeaders(token));

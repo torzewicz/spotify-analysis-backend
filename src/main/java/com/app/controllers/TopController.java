@@ -20,7 +20,6 @@ public class TopController {
 
     private final SpotifyConnectorComponent spotifyConnectorComponent;
 
-
     public TopController(SpotifyConnectorComponent spotifyConnectorComponent) {
         this.spotifyConnectorComponent = spotifyConnectorComponent;
     }

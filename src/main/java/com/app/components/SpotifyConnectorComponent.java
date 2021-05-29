@@ -1,6 +1,6 @@
 package com.app.components;
 
-import com.app.models.*;
+import com.app.models.spotify.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -54,8 +54,7 @@ public class SpotifyConnectorComponent {
     public Set<String> getUserTopGenres(TimeRange timeRange, String token) {
         List<TopArtist> userTopArtists = getUserTopArtists(timeRange, 50, token);
         if (userTopArtists != null) {
-            Set<String> collect = userTopArtists.stream().map(TopArtist::getGenres).flatMap(Collection::stream).collect(Collectors.toSet());
-            return collect;
+            return userTopArtists.stream().map(TopArtist::getGenres).flatMap(Collection::stream).collect(Collectors.toSet());
         }
 
         return null;

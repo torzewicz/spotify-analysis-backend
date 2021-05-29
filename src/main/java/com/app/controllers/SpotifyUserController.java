@@ -1,6 +1,7 @@
 package com.app.controllers;
 
-import com.app.models.user.User;
+import com.app.components.SpotifyConnectorComponent;
+import com.app.models.spotify.CurrentPlayback;
 import com.app.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -11,18 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/spotify-user")
 @Log4j
 @RequiredArgsConstructor
-public class UserController {
+public class SpotifyUserController {
 
+    private final SpotifyConnectorComponent spotifyConnectorComponent;
     private final UserService userService;
 
-    @GetMapping()
-    public ResponseEntity<User> getUser() {
-        User user = userService.getUserFromContext();
-        log.info("Getting user: " + user.getUsername());
-        user.setPassword(null);
-        return ResponseEntity.ok(user);
+    @GetMapping("/current")
+    public ResponseEntity<CurrentPlayback> getCurrentPlayback() {
+        return ResponseEntity.ok(spotifyConnectorComponent.getUsersCurrentPlayback(userService.getUserFromContext().getAccessToken()));
     }
 }

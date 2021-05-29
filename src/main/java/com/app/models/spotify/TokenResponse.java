@@ -1,4 +1,4 @@
-package com.app.models;
+package com.app.models.spotify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

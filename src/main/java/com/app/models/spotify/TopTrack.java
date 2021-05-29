@@ -1,8 +1,7 @@
-package com.app.models;
+package com.app.models.spotify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 

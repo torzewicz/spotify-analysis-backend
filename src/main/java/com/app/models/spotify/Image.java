@@ -1,4 +1,4 @@
-package com.app.models;
+package com.app.models.spotify;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Followers {
+public class Image {
 
-    private Integer total;
-    private String href;
+    private Integer height;
+    private Integer width;
+    private String url;
 }

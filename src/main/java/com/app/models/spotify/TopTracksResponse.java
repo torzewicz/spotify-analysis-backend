@@ -1,4 +1,4 @@
-package com.app.models;
+package com.app.models.spotify;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,19 +7,19 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TopArtistsResponse {
+public class TopTracksResponse {
 
-    public List<TopArtist> getItems() {
+    private List<TopTrack> items;
+
+    public List<TopTrack> getItems() {
         return items;
     }
 
-    public void setItems(List<TopArtist> items) {
+    public void setItems(List<TopTrack> items) {
         this.items = items;
     }
-
-    private List<TopArtist> items;
 }

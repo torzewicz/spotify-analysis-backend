@@ -1,6 +1,6 @@
 package com.app.components;
 
-import com.app.models.TopListEntry;
+import com.app.models.spotify.TopListEntry;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.Optional;
 @Component
 public class PolishTopListComponent {
 
-    private static List<TopListEntry> topListEntryList = Arrays.asList(
+    private static final List<TopListEntry> topListEntryList = Arrays.asList(
             new TopListEntry("7eBYMVok43QesT0KnuIkjn", "BUBBLETEA", 1),
             new TopListEntry("0VjIjW4GlUZAMYd2vXMi3b", "Blinding Lights", 2),
             new TopListEntry("2Y1Nd54Jrgciu2HtpP5ymM", "Impreza", 3),

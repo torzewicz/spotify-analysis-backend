@@ -1,4 +1,4 @@
-package com.app.models;
+package com.app.models.spotify;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

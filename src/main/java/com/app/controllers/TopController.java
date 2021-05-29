@@ -1,9 +1,12 @@
 package com.app.controllers;
 
 import com.app.components.SpotifyConnectorComponent;
-import com.app.models.TimeRange;
-import com.app.models.TopArtist;
-import com.app.models.TopTrack;
+import com.app.models.spotify.TimeRange;
+import com.app.models.spotify.TopArtist;
+import com.app.models.spotify.TopTrack;
+import com.app.models.user.User;
+import com.app.services.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,32 +19,34 @@ import java.util.Set;
 @RestController
 @RequestMapping("/top")
 @Log4j
+@RequiredArgsConstructor
 public class TopController {
 
     private final SpotifyConnectorComponent spotifyConnectorComponent;
+    private final UserService userService;
 
-    public TopController(SpotifyConnectorComponent spotifyConnectorComponent) {
-        this.spotifyConnectorComponent = spotifyConnectorComponent;
-    }
 
     @GetMapping
     @RequestMapping("/artists")
-    public List<TopArtist> getTopArtists(@RequestParam String token, @RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
+    public List<TopArtist> getTopArtists(@RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
         log.info("Getting top artists with time range: " + timeRange);
-        return spotifyConnectorComponent.getUserTopArtists(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, token);
+        User user = userService.getUserFromContext();
+        return spotifyConnectorComponent.getUserTopArtists(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, user.getAccessToken());
     }
 
     @GetMapping
     @RequestMapping("/tracks")
-    public List<TopTrack> getTopTracks(@RequestParam String token, @RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
+    public List<TopTrack> getTopTracks(@RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
         log.info("Getting top tracks with time range: " + timeRange);
-        return spotifyConnectorComponent.getUserTopTracks(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, token);
+        User user = userService.getUserFromContext();
+        return spotifyConnectorComponent.getUserTopTracks(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, user.getAccessToken());
     }
 
     @GetMapping
     @RequestMapping("/genres")
-    public Set<String> getTopGenres(@RequestParam String token, @RequestParam(required = false) TimeRange timeRange) {
-        return spotifyConnectorComponent.getUserTopGenres(timeRange == null ? TimeRange.LONG_TERM : timeRange, token);
+    public Set<String> getTopGenres(@RequestParam(required = false) TimeRange timeRange) {
+        User user = userService.getUserFromContext();
+        return spotifyConnectorComponent.getUserTopGenres(timeRange == null ? TimeRange.LONG_TERM : timeRange, user.getAccessToken());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.app.models;
+package com.app.models.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class JwtResponse {
 
-    private Integer height;
-    private Integer width;
-    private String url;
+    private String token;
+    private Long exp;
 }

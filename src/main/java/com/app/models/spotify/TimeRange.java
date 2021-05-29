@@ -1,4 +1,4 @@
-package com.app.models;
+package com.app.models.spotify;
 
 public enum TimeRange {
 

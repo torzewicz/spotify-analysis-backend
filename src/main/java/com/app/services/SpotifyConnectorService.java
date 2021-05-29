@@ -30,16 +30,27 @@ public class SpotifyConnectorService {
     @Value("${spotify_client_secret}")
     private String clientSecret;
 
-    public User fetchAccessToken(String code, User user) {
+    public User fetchAccessToken(String code, User user, String redirectUri) {
         log.info("Connecting user: " + user.getUsername() + " with Spotify account.");
+
+        if (user.isConnectedToSpotify() || user.isConnectingToSpotify()) {
+            log.warn("User already connected or connecting now");
+            user.setPassword(null);
+            return user;
+        }
+
+        user.setConnectingToSpotify(true);
+        userRepository.save(user);
+
         if (code == null || code.equalsIgnoreCase("")) {
-            return null;
+            user.setPassword(null);
+            return user;
         }
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "authorization_code");
         map.add("code", code);
-        map.add("redirect_uri", "http://localhost:3000");
+        map.add("redirect_uri", redirectUri);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -53,12 +64,16 @@ public class SpotifyConnectorService {
             user.setAccessToken(body.getAccessToken());
             user.setRefreshToken(body.getRefreshToken());
             user.setConnectedToSpotify(true);
+            user.setConnectingToSpotify(false);
             user.setTokenExpires(ZonedDateTime.now().plusSeconds(body.getExpiresIn()));
             User save = userRepository.save(user);
             save.setPassword(null);
             return save;
 
-        } else return null;
+        } else {
+            user.setPassword(null);
+            return user;
+        }
     }
 
     public void refreshAccessToken(User user) {

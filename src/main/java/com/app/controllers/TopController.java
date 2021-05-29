@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Set;
 
+import static com.app.utils.LogUtils.getLogMessageWithUsername;
+
 @RestController
 @RequestMapping("/top")
 @Log4j
@@ -29,16 +31,16 @@ public class TopController {
     @GetMapping
     @RequestMapping("/artists")
     public List<TopArtist> getTopArtists(@RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
-        log.info("Getting top artists with time range: " + timeRange);
         User user = userService.getUserFromContext();
+        log.info(getLogMessageWithUsername(user, "Getting top artists with time range: " + timeRange));
         return spotifyConnectorComponent.getUserTopArtists(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, user.getAccessToken());
     }
 
     @GetMapping
     @RequestMapping("/tracks")
     public List<TopTrack> getTopTracks(@RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
-        log.info("Getting top tracks with time range: " + timeRange);
         User user = userService.getUserFromContext();
+        log.info(getLogMessageWithUsername(user, "Getting top tracks with time range: " + timeRange));
         return spotifyConnectorComponent.getUserTopTracks(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, user.getAccessToken());
     }
 

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.app.utils.LogUtils.getLogMessageWithUsername;
+
 
 @RestController
 @RequestMapping("/user")
@@ -21,7 +23,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<User> getUser() {
         User user = userService.getUserFromContext();
-        log.info("Getting user: " + user.getUsername());
+        log.info(getLogMessageWithUsername(user, "Getting user"));
         user.setPassword(null);
         return ResponseEntity.ok(user);
     }

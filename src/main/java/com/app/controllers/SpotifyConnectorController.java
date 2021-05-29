@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.app.utils.LogUtils.getLogMessageWithUsername;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -21,9 +23,9 @@ public class SpotifyConnectorController {
     private final UserService userService;
 
     @GetMapping("/connect")
-    public User authorize(@RequestParam String code) {
-        log.info("Getting access token");
+    public User authorize(@RequestParam String code, @RequestParam String redirectUri) {
         User user = userService.getUserFromContext();
-        return spotifyConnectorService.fetchAccessToken(code, user);
+        log.info(getLogMessageWithUsername(user, "Getting access token"));
+        return spotifyConnectorService.fetchAccessToken(code, user, redirectUri);
     }
 }

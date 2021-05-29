@@ -47,6 +47,9 @@ public class User implements UserDetails {
     private boolean connectedToSpotify;
 
     @JsonIgnore
+    private boolean connectingToSpotify;
+
+    @JsonIgnore
     private String refreshToken;
 
     @JsonIgnore

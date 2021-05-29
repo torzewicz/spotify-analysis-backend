@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: spotify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: torzewicz/spotify-backend:1.0
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRES_USER
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "viviclabs1"
+            - name: POSTGRES_HOST
+              value: "10.88.3.120:5432"
+
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "270Mi"
+              cpu: "20m"
+            limits:
+              memory: "500Mi"
+              cpu: "700m"

@@ -17,18 +17,23 @@ public class UserService {
     private final SpotifyConnectorService spotifyConnectorService;
 
     public User getUserFromContext() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        if (user.getTokenExpires() == null) {
-            user.setTokenExpires(ZonedDateTime.now());
-        }
-        if (ZonedDateTime.now().isAfter(user.getTokenExpires())) {
-            try {
-                spotifyConnectorService.refreshAccessToken(user);
-            } catch (Exception e) {
-                log.warn("Could not refresh Spotify access token: " + e.getMessage());
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (user.getTokenExpires() == null) {
+                user.setTokenExpires(ZonedDateTime.now());
             }
+            if (ZonedDateTime.now().isAfter(user.getTokenExpires())) {
+                try {
+                    spotifyConnectorService.refreshAccessToken(user);
+                } catch (Exception e) {
+                    log.warn("Could not refresh Spotify access token: " + e.getMessage());
+                }
+            }
+            return user;
+        } catch (Exception e) {
+            log.error("Getting user from context error: " + e.getMessage());
+            return null;
         }
-        return user;
     }
 }

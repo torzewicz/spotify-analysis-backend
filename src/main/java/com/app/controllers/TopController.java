@@ -32,7 +32,7 @@ public class TopController {
     @RequestMapping("/artists")
     public List<TopArtist> getTopArtists(@RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
         User user = userService.getUserFromContext();
-        log.info(getLogMessageWithUsername(user, "Getting top artists with time range: " + timeRange));
+        log.info(getLogMessageWithUsername(user, "Getting top artists with time range: " + timeRange + " and limit: " + limit));
         return spotifyConnectorComponent.getUserTopArtists(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, user.getAccessToken());
     }
 
@@ -40,7 +40,7 @@ public class TopController {
     @RequestMapping("/tracks")
     public List<TopTrack> getTopTracks(@RequestParam(required = false) TimeRange timeRange, @RequestParam(required = false) Integer limit) {
         User user = userService.getUserFromContext();
-        log.info(getLogMessageWithUsername(user, "Getting top tracks with time range: " + timeRange));
+        log.info(getLogMessageWithUsername(user, "Getting top tracks with time range: " + timeRange + " and limit: " + limit));
         return spotifyConnectorComponent.getUserTopTracks(timeRange == null ? TimeRange.LONG_TERM : timeRange, limit == null ? 25 : limit, user.getAccessToken());
     }
 

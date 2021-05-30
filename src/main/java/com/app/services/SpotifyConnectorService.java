@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.ZonedDateTime;
 
+import static com.app.utils.LogUtils.getLogMessageWithUsername;
+
 @Service
 @Log4j
 public class SpotifyConnectorService {
@@ -34,7 +36,7 @@ public class SpotifyConnectorService {
         log.info("Connecting user: " + user.getUsername() + " with Spotify account.");
 
         if (user.isConnectedToSpotify() || user.isConnectingToSpotify()) {
-            log.warn("User already connected or connecting now");
+            log.warn(getLogMessageWithUsername(user, "User already connected or connecting now"));
             user.setPassword(null);
             return user;
         }
@@ -43,6 +45,7 @@ public class SpotifyConnectorService {
         userRepository.save(user);
 
         if (code == null || code.equalsIgnoreCase("")) {
+            log.warn(getLogMessageWithUsername(user, "Code is null"));
             user.setPassword(null);
             return user;
         }
@@ -77,7 +80,7 @@ public class SpotifyConnectorService {
     }
 
     public void refreshAccessToken(User user) {
-        log.info("Refreshing spotify access token for: " + user.getUsername());
+        log.info(getLogMessageWithUsername(user, "Refreshing spotify access token"));
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "refresh_token");
         map.add("refresh_token", user.getRefreshToken());

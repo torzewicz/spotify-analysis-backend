@@ -40,8 +40,8 @@ public class EmailService {
         message.setFrom(new InternetAddress(username));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailid));
 
-        message.setSubject("Two Factor Authentication code from our Service");
-        message.setText("Your Two Factor Authentication code is:"+twoFaCode);
+        message.setSubject("Email verification");
+        message.setText("Your email verification code is: "+twoFaCode);
         Transport.send(message);
         return true;
     }

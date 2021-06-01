@@ -59,7 +59,7 @@ public class User implements UserDetails {
     private ZonedDateTime tokenExpires;
 
     @JsonIgnore
-    private Integer verificationCode = 0000;
+    private String verificationCode;
 
     @JsonIgnore
     private Boolean verified = false;

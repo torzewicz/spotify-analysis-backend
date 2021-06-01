@@ -89,10 +89,11 @@ public class AuthController {
         }
 
         Random rnd = new Random();
-        Integer verificationCode = rnd.nextInt(999999);
+        Integer code = rnd.nextInt(999999);
+        String verificationCode = String.format("%06d", code);
 
         try {
-            emailService.sendEmail(signUpRequest.getEmail(), Integer.toString(verificationCode));
+            emailService.sendEmail(signUpRequest.getEmail(), verificationCode);
         } catch (MessagingException e) {
             return ResponseEntity.badRequest().body(new Response("Cannot verify email address!", ""));
         }

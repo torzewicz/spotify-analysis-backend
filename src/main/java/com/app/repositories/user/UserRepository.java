@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,17 +19,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-
-    @Query("select u.verified from User u where username = :username")
-    boolean checkEmailVerificationByUsername(@Param("username") String username);
-
-    @Query("select u.verificationCode from User u where email = :email")
-    Integer checkVerificationCodeByEmail(@Param("email") String email);
-
-    @Transactional
-    @Modifying
-    @Query("update User u set u.verified = true where u.email like :email")
-    void verifyUserByEmail(@Param("email") String email);
 }

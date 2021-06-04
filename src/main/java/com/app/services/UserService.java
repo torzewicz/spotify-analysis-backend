@@ -7,9 +7,9 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class UserService {
 
     public boolean checkCodeByEmail(String email, String code) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isPresent() && user.get().getVerificationCode().equals(code)) {
+        if (user.isPresent() && user.get().getVerificationCode().equals(code)) {
             return true;
         }
         return false;
@@ -58,8 +58,8 @@ public class UserService {
 
     public boolean checkVerificationByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isPresent() && user.get().getVerified()) {
-                return true;
+        if (user.isPresent() && user.get().getVerified()) {
+            return true;
         }
         return false;
     }
@@ -74,5 +74,11 @@ public class UserService {
 
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public List<User> getUsers() {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> user.setPassword(null));
+        return users;
     }
 }

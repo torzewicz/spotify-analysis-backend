@@ -61,7 +61,6 @@ public class User implements UserDetails {
     @JsonIgnore
     private String verificationCode;
 
-    @JsonIgnore
     private Boolean verified = false;
 
     @Override

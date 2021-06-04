@@ -58,6 +58,12 @@ public class User implements UserDetails {
     @JsonIgnore
     private ZonedDateTime tokenExpires;
 
+    @JsonIgnore
+    private String verificationCode;
+
+    @JsonIgnore
+    private Boolean verified = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(this.role.name()));

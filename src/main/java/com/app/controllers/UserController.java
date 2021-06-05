@@ -5,7 +5,7 @@ import com.app.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @Secured("ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<List<User>> getUsers() {
         User user = userService.getUserFromContext();
@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @Secured("ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping()
     public ResponseEntity<Void> deleteUser(String username) {
         User user = userService.getUserFromContext();

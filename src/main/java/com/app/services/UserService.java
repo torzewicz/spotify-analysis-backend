@@ -81,4 +81,10 @@ public class UserService {
         users.forEach(user -> user.setPassword(null));
         return users;
     }
+
+    public void deleteUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        user.ifPresent(value -> value.setEnabled(false));
+        user.ifPresent(userRepository::save);
+    }
 }

@@ -61,8 +61,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private String verificationCode;
 
-    @JsonIgnore
     private Boolean verified = false;
+
+    public Boolean enabled = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,7 +87,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
 }

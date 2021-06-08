@@ -23,20 +23,24 @@ public class UserService {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = (User) authentication.getPrincipal();
-            if (user.getTokenExpires() == null) {
-                user.setTokenExpires(ZonedDateTime.now());
-            }
-            if (ZonedDateTime.now().isAfter(user.getTokenExpires())) {
-                try {
-                    spotifyConnectorService.refreshAccessToken(user);
-                } catch (Exception e) {
-                    log.warn("Could not refresh Spotify access token: " + e.getMessage());
-                }
-            }
+            refreshSpotifyToken(user);
             return user;
         } catch (Exception e) {
             log.error("Getting user from context error: " + e.getMessage());
             return null;
+        }
+    }
+
+    public void refreshSpotifyToken(User user) {
+        if (user.getTokenExpires() == null) {
+            user.setTokenExpires(ZonedDateTime.now());
+        }
+        if (ZonedDateTime.now().isAfter(user.getTokenExpires())) {
+            try {
+                spotifyConnectorService.refreshAccessToken(user);
+            } catch (Exception e) {
+                log.warn("Could not refresh Spotify access token: " + e.getMessage());
+            }
         }
     }
 
@@ -50,18 +54,12 @@ public class UserService {
 
     public boolean checkCodeByEmail(String email, String code) {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && user.get().getVerificationCode().equals(code)) {
-            return true;
-        }
-        return false;
+        return user.isPresent() && user.get().getVerificationCode().equals(code);
     }
 
     public boolean checkVerificationByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent() && user.get().getVerified()) {
-            return true;
-        }
-        return false;
+        return user.isPresent() &&( user.get().getVerified() == null || user.get().getVerified());
     }
 
     public boolean checkExistenceByUsername(String username) {
@@ -82,9 +80,18 @@ public class UserService {
         return users;
     }
 
+    public User getUserByUsername(String username) {
+        Optional<User> byUsername = userRepository.findByUsername(username);
+        if (byUsername.isPresent()) {
+            refreshSpotifyToken(byUsername.get());
+            return byUsername.get();
+        }
+        return null;
+    }
+
     public void deleteUser(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        user.ifPresent(value -> value.setEnabled(false));
+        user.ifPresent(value -> value.setEnabled(!user.get().getEnabled()));
         user.ifPresent(userRepository::save);
     }
 }

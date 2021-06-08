@@ -1,14 +1,12 @@
 package com.app.controllers;
 
 import com.app.models.user.*;
-import com.app.repositories.user.UserRepository;
 import com.app.security.SecurityConstants;
 import com.app.security.filters.JwtUtils;
 import com.app.services.EmailService;
 import com.app.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
-import static com.app.security.filters.JwtUtils.getIp;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,10 +30,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
-    @Autowired
-    EmailService emailService;
-    @Autowired
-    UserService userService;
+    private final EmailService emailService;
+    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
@@ -47,7 +42,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        if(userService.checkVerificationByUsername(loginRequest.getUsername())) {
+        if (userService.checkVerificationByUsername(loginRequest.getUsername())) {
             log.info("verified");
             return ResponseEntity.ok(new JwtResponse(jwt, new Date((new Date()).getTime() + SecurityConstants.EXPIRATION_TIME).getTime()));
         } else {
@@ -61,7 +56,7 @@ public class AuthController {
     @PostMapping("/verify")
     public ResponseEntity<Object> verifyUser(@Valid @RequestBody VerifyRequest verifyRequest, HttpServletRequest request) {
         log.info(verifyRequest.getEmail() + " is verifying now, from: " + getIp(request));
-        if(userService.checkCodeByEmail(verifyRequest.getEmail(), verifyRequest.getCode())) {
+        if (userService.checkCodeByEmail(verifyRequest.getEmail(), verifyRequest.getCode())) {
             userService.verifyUserByEmail(verifyRequest.getEmail());
             return ResponseEntity
                     .ok()
@@ -106,13 +101,14 @@ public class AuthController {
         User user = userService.saveUser(signUpRequest);
         user.setPassword(null);
         user.setConnectedToSpotify(false);
+        user.setEnabled(true);
         return ResponseEntity.ok(user);
     }
 
     public static String getIp(HttpServletRequest request) {
         String remoteAddr = request.getHeader("X-FORWARDED-FOR");
-        if (remoteAddr != null  && !remoteAddr.equals("")) {
-            return  remoteAddr;
+        if (remoteAddr != null && !remoteAddr.equals("")) {
+            return remoteAddr;
         }
         return request.getRemoteAddr();
     }

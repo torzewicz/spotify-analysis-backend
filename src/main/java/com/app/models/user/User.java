@@ -41,6 +41,7 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private RoleType role;
 
     @NotNull

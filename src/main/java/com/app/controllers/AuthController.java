@@ -5,6 +5,7 @@ import com.app.security.SecurityConstants;
 import com.app.security.filters.JwtUtils;
 import com.app.services.EmailService;
 import com.app.services.UserService;
+import com.app.utils.LogUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.ResponseEntity;
@@ -42,14 +43,27 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        if (userService.checkVerificationByUsername(loginRequest.getUsername())) {
-            log.info("verified");
-            return ResponseEntity.ok(new JwtResponse(jwt, new Date((new Date()).getTime() + SecurityConstants.EXPIRATION_TIME).getTime()));
+        User userByUsername = userService.getUserByUsername(loginRequest.getUsername());
+        if (userByUsername != null) {
+            if (userByUsername.isEnabled()) {
+                if (userService.checkVerificationByUsername(loginRequest.getUsername())) {
+                    log.info(LogUtils.getLogMessageWithUsername(userByUsername, "User verified"));
+
+
+                    return ResponseEntity.ok(new JwtResponse(jwt, new Date((new Date()).getTime() + SecurityConstants.EXPIRATION_TIME).getTime()));
+                } else {
+                    log.info(LogUtils.getLogMessageWithUsername(userByUsername, "User not verified"));
+                    return ResponseEntity
+                            .ok()
+                            .body(new Response("Verify your email address", ""));
+                }
+            } else {
+                return ResponseEntity
+                        .ok()
+                        .body(new Response("Your account is disabled", ""));
+            }
         } else {
-            log.info("not verified");
-            return ResponseEntity
-                    .ok()
-                    .body(new Response("Verify your email address", ""));
+            return null;
         }
     }
 

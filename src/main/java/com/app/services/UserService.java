@@ -34,6 +34,11 @@ public class UserService {
     public void refreshSpotifyToken(User user) {
         if (user.getTokenExpires() == null) {
             user.setTokenExpires(ZonedDateTime.now());
+            try {
+                spotifyConnectorService.refreshAccessToken(user);
+            } catch (Exception e) {
+                log.warn("Could not refresh Spotify access token: " + e.getMessage());
+            }
         }
         if (ZonedDateTime.now().isAfter(user.getTokenExpires())) {
             try {

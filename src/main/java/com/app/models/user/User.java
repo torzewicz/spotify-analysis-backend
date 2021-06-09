@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -32,13 +34,16 @@ public class User implements UserDetails {
 
     @NotNull
     @Column(unique = true)
+    @Size(min = 4)
     private String username;
 
     @Column(unique = true)
+    @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     @NotNull
     private String email;
 
     @NotNull
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{5,}$")
     private String password;
 
     @Enumerated(EnumType.STRING)

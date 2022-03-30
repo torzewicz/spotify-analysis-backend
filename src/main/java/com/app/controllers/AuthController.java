@@ -105,6 +105,7 @@ public class AuthController {
         try {
             emailService.sendEmail(signUpRequest.getEmail(), verificationCode);
         } catch (MessagingException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(new Response("Cannot verify email address!", ""));
         }
 

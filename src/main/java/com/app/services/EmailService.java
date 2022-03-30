@@ -22,19 +22,24 @@ public class EmailService {
     @Value("${smtp_password}")
     private String password;
 
-    public boolean sendEmail(String emailid, String twoFaCode) throws AddressException, MessagingException{
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+    private static final String HOST = "poczta.agh.edu.pl";
 
-        Session session = Session.getInstance(props,
+    public boolean sendEmail(String emailid, String twoFaCode) throws AddressException, MessagingException{
+        Properties properties = System.getProperties();
+
+        properties.put("mail.smtp.host", HOST);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        Session session = Session.getInstance(properties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(username, password);
                     }
                 });
+
+        session.setDebug(true);
 
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(username));
